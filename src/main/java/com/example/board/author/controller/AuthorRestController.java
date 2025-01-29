@@ -5,6 +5,7 @@ import com.example.board.author.dtos.AuthorDetailRes;
 import com.example.board.author.dtos.AuthorListRes;
 import com.example.board.author.dtos.AuthorSaveReq;
 import com.example.board.author.dtos.AuthorUpdateReq;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,11 +35,23 @@ public class AuthorRestController {
         this.authorService = authorService;
     }
 
-    @PostMapping("/create")
-    public String authorCreate(@Valid AuthorSaveReq dto) { //@Requestbody 원래는 사용
-        authorService.save(dto);
-        return "OK";
+    @GetMapping("/create")
+    public String authorCreateString(){
+        return "/author/author_create";
     }
+
+    @GetMapping("/login")
+    public String authorLoginScreen(){
+        return "/author/author_login";
+    }
+
+
+    @PostMapping("/create")
+    public String authorCreate(@ModelAttribute @Valid AuthorSaveReq dto) { //@Requestbody 원래는 사용
+        authorService.save(dto);
+        return "redirect:/";
+    }
+
 
     @GetMapping("/list")
     public String authorList(Model model) {
@@ -46,14 +59,24 @@ public class AuthorRestController {
         model.addAttribute("authorList", authorListResList);
         return "author/author_list";
     }
-        @GetMapping("/detail")
-        public AuthorDetailRes authorDetail (@PathVariable() Long id){
-            return authorService.findById(id);
-        }
 
-        @PostMapping("/update")
-        public void authorUpdate (@PathVariable() Long id, @Valid AuthorUpdateReq dto){
-            authorService.update(id, dto);
-        }
-
+    @GetMapping("/delete/{id}")
+    public String authorDelete(@PathVariable Long id) {
+        authorService.delete(id);
+        return "OK";
     }
+
+    @GetMapping("/detail/{id}")
+    public String authorDetail (@PathVariable Long id, Model model) {
+        AuthorDetailRes dto = authorService.findById(id);
+        model.addAttribute("author", dto);
+        return "author/author_detail";
+    }
+
+    @PostMapping("/update")
+    public String authorUpdate (@PathVariable Long id, @ModelAttribute AuthorUpdateReq dto){
+        authorService.update(id, dto);
+        return "ok";
+    }
+
+}

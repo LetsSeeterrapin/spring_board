@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,8 +28,8 @@ import java.util.List;
 //2)글목록조회(post/list)
 //  -id, title, author_email return (json)
 //        -DTO명 : PostListRes
-@RestController
-@RequestMapping("/post/rest")
+@Controller
+@RequestMapping("/post")
 public class PostRestController {
     private final PostService postService;
 
@@ -35,28 +37,43 @@ public class PostRestController {
         this.postService = postService;
     }
 
+    @GetMapping("/create")
+    public String postCreateScreen(){
+        return "/post/post_create";
+    }
     @PostMapping("/create")
-    public String postCreate(@Valid PostSaveReq dto){
+    public String postCreate(@Valid @ModelAttribute PostSaveReq dto) {
         postService.save(dto);
-        return "ok";
+        return "redirect:/post/list/paging";
     }
 
-    @GetMapping("/List")
-    public List<PostListRes> postList(){
-        return postService.findAll();
+    @GetMapping("/list")
+    public String postList(Model model){
+        model.addAttribute("postList", postService.findAll());
+        return "post/post_list";
     }
 
-    @GetMapping("/List/paging")
+    @GetMapping("/list/paging")
 //    페이징 처리를 위한 테이터 형식 : localhost:8080/post/list/paging?size=10&page=0&sort=createdTime,desc
-    public Page<PostListRes> postListPaging(@PageableDefault(size = 10, sort = "createdTime",
+    public String postListPaging(Model model, @PageableDefault(size = 10, sort = "id",
             direction = Sort.Direction.DESC) Pageable pageable){
-        return postService.findAllPaging(pageable);
+        model.addAttribute("postList",postService.findAllPaging(pageable));
+        return "post/post_list";
     }
 
-    @GetMapping("/detail")
-    public PostDetailRes postDetail(@PathVariable Long id){
-        return postService.findById(id);
+    @GetMapping("/list/fetchjoin")
+    @ResponseBody
+    public List<PostListRes> postListFetchjoin() {
+        return postService.listFetchJoin();
+//        01.23 수업 미참여 부분
     }
+
+    @GetMapping("/detail/{id}")
+    public String postDetail(@PathVariable Long id, Model model){
+        model.addAttribute("post", postService.findById(id));
+        return "post/post_detail";
+    }
+
 
     @PostMapping("/update")
     public String postUpdate(@PathVariable Long id, @ModelAttribute PostUpdateReq dto){

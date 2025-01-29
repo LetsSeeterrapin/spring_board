@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 //1.author 삭제   => casecade되는지도 확인
 //  : /author/delete/{id}
@@ -24,17 +25,12 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @Builder
 public class AuthorDetailRes {
-    @NotEmpty
     private Long id;
-    @NotEmpty
     private String name;
-    @NotEmpty
     private String email;
-    @NotEmpty
     private String password;
     private Role role;
     private int postCount;
-    @NotEmpty
-    private BaseTimeEntity createdTime;
+    private LocalDateTime createdTime;
 
 }

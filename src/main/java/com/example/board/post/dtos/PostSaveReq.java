@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -16,10 +17,10 @@ public class PostSaveReq {
     @NotEmpty
     private String title;
     private String content;
-    @NotEmpty
-    private String email;
+    private String appointment;
+    private String appointmentTime;
 
-    public Post toEntity(Author author){
-        return Post.builder().title(this.title).content(this.content).author(author).build();
+    public Post toEntity(Author author, LocalDateTime appointmentTime){
+        return Post.builder().title(this.title).content(this.content).author(author).appointment(this.appointment).appointmentTime(appointmentTime).build();
     }
 }

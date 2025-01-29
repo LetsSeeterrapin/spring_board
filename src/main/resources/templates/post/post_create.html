@@ -6,5 +6,30 @@
 </head>
 <body>
 <div th:replace="common/header :: headerFragment"></div>
+    <div class="container">
+    <div class="page-header">글쓰기</div>
+    <form action="/post/create" method="post" enctype="application/x-www-form-urlencoded">
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" class="form-control" name="title" id="title"></input>
+        </div>
+        <div class="form-group">
+            <label for="content">내용</label>
+            <textarea class="form-control" name="content" id="content" rows="10" maxlength="3000" placeholder="여기에 입력해주세요."></textarea>
+        </div>
+        <div class="form-group">
+        <div>
+            예약여부
+            <input type="radio" name="appointment" value="Y">YES
+            <input type="radio" name="appointment" value="N" checked>NO
+            예약시간
+            <input type="datetime-local" name="appointmentTime">
+        </div>
+        <button type="submit" class="btn btn-secondary">작성완료</button>
+    </div>
+    </form>
+
+</div>
+
 </body>
 </html>

@@ -31,7 +31,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class Post extends BaseTimeEntity {
 
     @Id
@@ -44,23 +43,39 @@ public class Post extends BaseTimeEntity {
     @Column(length = 3000)
     private String content;
     private String appointment;
-    private LocalDateTime appoinmentTime;
+    private LocalDateTime appointmentTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private Author author;
 
     public PostListRes postListResFromEntity(){
-        return PostListRes.builder().id(this.id).title(this.title).authorEmail(this.author.getEmail()).build();
+        return PostListRes.builder()
+                .id(this.id)
+                .title(this.title)
+                .authorEmail(this.author.getEmail())
+                .build();
     }
 
     public PostDetailRes postDetailFromEntity(){
-        return PostDetailRes.builder().id(this.id).title(this.title).build();
+        return PostDetailRes.builder()
+                .id(this.id)
+                .title(this.title)
+                .content(this.content)
+                .authorEmail(this.author.getEmail())
+                .createdTime(this.getCreatedTime())
+                .updatedTime(this.getUpdatedTime())
+                .build();
     }
 
     public void update(PostUpdateReq dto){
         this.title = dto.getTitle();
         this.content = dto.getContent();
+    }
+
+    public void updateAppointmentToN(String appointment) {
+        this.appointment = appointment;
+//        01.23 수업 미참여 부분
     }
 
 

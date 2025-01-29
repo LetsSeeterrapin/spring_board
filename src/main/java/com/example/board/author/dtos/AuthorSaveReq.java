@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -22,6 +24,7 @@ import javax.validation.constraints.Size;
 //2)회원목록조회(author/list)
 //  -id, name, email만 return (json)
 //        -DTO명 : AuthorListRes
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,11 +38,15 @@ public class AuthorSaveReq {
     private String password;
 //    사용자가 String으로 입력해도 Role클래스로 자동변환
 //    ex)ADMIN, USER 등으로 입력해서 ENUM클래스로 변환
-    private Role role;
+@Enumerated(EnumType.STRING)
+@Builder.Default
+    private Role role = Role.USER;
 
-    public Author toEntity() {
-        return Author.builder().name(this.name).email(this.email)
-                .password(this.password)
+    public Author toEntity(String encodedPassword) {
+        return Author.builder()
+                .name(this.name)
+                .email(this.email)
+                .password(encodedPassword)
                 .role(this.role)
                 .build();
     }

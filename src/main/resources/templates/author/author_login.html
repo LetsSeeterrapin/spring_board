@@ -6,8 +6,19 @@
 </head>
 <body>
 <div th:replace="common/header :: headerFragment"></div>
-<div class="container">
-<div class="page-header"><h1>회원상세조회</h1></div>
+    <div class="page-header"><h1>로그인</h1></div>
+<form action="/doLogin" method="post" enctype="application/x-www-form-urlencoded"></form>
+<div class="form-group">
+    email
+    <input type="email" class="form-control" name="email">
+</div>
+<div class="form-group">
+    password
+    <input type="password" class="form-control" name="password">
+</div>
+<button type="submit" class="btn btn-secondary">로그인</button>
+
+
 <table class="table">
     <tr><td>id</td><td th:text="${author.id}"></td></tr>
     <tr><td>name</td><td th:text="${author.name}"></td></tr>
@@ -17,6 +28,5 @@
     <tr><td>postCount</td><td th:text="${author.postCount}"></td></tr>
     <tr><td>createdTime</td><td th:text="${author.createdTime}"></td></tr>
 </table>
-</div>
 </body>
 </html>
